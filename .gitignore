@@ -1,0 +1,48 @@
+## webapp gitignore
+
+# compiled output
+/charts-demo/dist
+/charts-demo/tmp
+/charts-demo/out-tsc
+
+# dependencies
+/charts-demo/node_modules
+
+# profiling files
+/charts-demo/chrome-profiler-events.json
+/charts-demo/speed-measure-plugin.json
+
+# IDEs and editors
+/charts-demo/.idea
+/charts-demo/.project
+/charts-demo/.classpath
+/charts-demo/.c9/
+/charts-demo/*.launch
+/charts-demo/.settings/
+/charts-demo/*.sublime-workspace
+
+# IDE - VSCode
+/charts-demo/.vscode/*
+/charts-demo/!.vscode/settings.json
+/charts-demo/!.vscode/tasks.json
+/charts-demo/!.vscode/launch.json
+/charts-demo/!.vscode/extensions.json
+
+# misc
+/charts-demo/.sass-cache
+/charts-demo/connect.lock
+/charts-demo/coverage
+/charts-demo/libpeerconnection.log
+/charts-demo/npm-debug.log
+/charts-demo/yarn-error.log
+/charts-demo/testem.log
+/charts-demo/typings
+
+# System Files
+/charts-demo/.DS_Store
+/charts-demo/Thumbs.db
+
+#server gitignore
+
+/charts-backend/node_modules
+/charts-backend/dist
