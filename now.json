@@ -1,0 +1,19 @@
+{
+  "name": "coinbase-demo",
+  "alias": [
+    "coinbase-demo.200kph.io"
+  ],
+  "version": 2,
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "builds": [
+    {
+      "src": "charts-demo/package.json",
+      "use": "@now/static-build",
+      "config": {
+        "useBuildUtils": "@now/build-utils@canary"
+      }
+    }
+  ]
+}
