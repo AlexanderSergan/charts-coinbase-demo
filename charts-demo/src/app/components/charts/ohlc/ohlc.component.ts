@@ -278,10 +278,10 @@ export class OhlcComponent implements OnInit {
      this.indicatorTop = d3.scaleLinear()
       .range([this.dim.indicator.top, this.dim.indicator.bottom]);
 
-     this.parseDate = d3.timeParse("%d-%b-%y");
+     this.parseDate = d3.timeParse("%d-%b-%y"); //  date: '2018-12-09 21:15',
 
      this.zoom = d3.zoom()
-      .on("zoom", zoomed);
+      .on("zoom", this.zoomed);
 
      this.x = techan.scale.financetime()
       .range([0, this.dim.plot.width]);
@@ -448,7 +448,7 @@ this.defs.selectAll("indicatorClip").data([0, 1])
 
 this.ohlcSelection.append("g")
   .attr("class", "axis")
-  .attr("transform", "translate(" + x(1) + ",0)")
+  .attr("transform", "translate(" + this.x(1) + ",0)")
   .append("text")
   .attr("transform", "rotate(-90)")
   .attr("y", -12)
@@ -497,11 +497,11 @@ this.ohlcSelection.append("g")
 
 this.indicatorSelection.append("g")
  .attr("class", "axis right")
- .attr("transform", "translate(" + x(1) + ",0)");
+ .attr("transform", "translate(" + this.x(1) + ",0)");
 
 this.indicatorSelection.append("g")
  .attr("class", "axis left")
- .attr("transform", "translate(" + x(0) + ",0)");
+ .attr("transform", "translate(" + this.x(0) + ",0)");
 
 this.indicatorSelection.append("g")
  .attr("class", "indicator-plot")
@@ -639,7 +639,7 @@ showD3Chart() {
 
   this.x.domain(techan.scale.plot.time(data).domain());
   this.y.domain(techan.scale.plot.ohlc(data.slice(indicatorPreRoll)).domain());
-  this.yPercent.domain(techan.scale.plot.percent(y, accessor(data[indicatorPreRoll])).domain());
+  this.yPercent.domain(techan.scale.plot.percent(this.y, accessor(data[indicatorPreRoll])).domain());
   this.yVolume.domain(techan.scale.plot.volume(data).domain());
 
    const trendlineData = [
@@ -699,7 +699,7 @@ showD3Chart() {
 
  zoomed() {
   this.x.zoomable().domain(d3.event.transform.rescaleX(this.zoomableInit).domain());
-  y.domain(d3.event.transform.rescaleY(this.yInit).domain());
+  this.y.domain(d3.event.transform.rescaleY(this.yInit).domain());
   this.yPercent.domain(d3.event.transform.rescaleY(this.yPercentInit).domain());
 
   this.draw();
