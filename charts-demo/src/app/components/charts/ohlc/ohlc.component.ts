@@ -249,6 +249,15 @@ export class OhlcComponent implements OnInit {
   volumeAnnotation
 
 
+  defs
+  svg
+
+  macdScale
+
+  rsiScale
+
+  indicatorSelection
+
 
 
 
@@ -258,6 +267,7 @@ export class OhlcComponent implements OnInit {
     console.log('holla techan!', techan)
     console.log('holla d3!', d3)
 
+    debugger
 
     // this.d3
 
@@ -433,10 +443,10 @@ export class OhlcComponent implements OnInit {
     this.defs.selectAll('indicatorClip').data([0, 1])
       .enter()
       .append('clipPath')
-      .attr('id', function (d, i) { return 'indicatorClip-' + i })
+      .attr('id',  (d, i) => 'indicatorClip-' + i )
       .append('rect')
       .attr('x', 0)
-      .attr('y', function (d, i) { return this.indicatorTop(i) })
+      .attr('y',  (d, i) =>  this.indicatorTop(i) )
       .attr('width', this.dim.plot.width)
       .attr('height', this.dim.indicator.height)
 
@@ -534,85 +544,88 @@ export class OhlcComponent implements OnInit {
 
 
 
+        this.macd = techan.plot.macd()
+          .xScale(this.x)
+          .yScale(this.macdScale)
+
+        this.macdAxis = d3.axisRight(this.macdScale)
+          .ticks(3)
+
+        this.macdAnnotation = techan.plot.axisannotation()
+          .axis(this.macdAxis)
+          .orient('right')
+          .format(d3.format(',.2f'))
+          .translate([this.x(1), 0])
+
+        this.macdAxisLeft = d3.axisLeft(this.macdScale)
+          .ticks(3)
+
+        this.macdAnnotationLeft = techan.plot.axisannotation()
+          .axis(this.macdAxisLeft)
+          .orient('left')
+          .format(d3.format(',.2f'))
+
+        this.rsi = techan.plot.rsi()
+          .xScale(this.x)
+          .yScale(this.rsiScale)
+
+        this.rsiAxis = d3.axisRight(this.rsiScale)
+          .ticks(3)
+
+        this.rsiAnnotation = techan.plot.axisannotation()
+          .axis(this.rsiAxis)
+          .orient('right')
+          .format(d3.format(',.2f'))
+          .translate([this.x(1), 0])
+
+        this.rsiAxisLeft = d3.axisLeft(this.rsiScale)
+          .ticks(3)
+
+        this.rsiAnnotationLeft = techan.plot.axisannotation()
+          .axis(this.rsiAxisLeft)
+          .orient('left')
+          .format(d3.format(',.2f'))
+
+        this.ohlcCrosshair = techan.plot.crosshair()
+          .xScale(this.timeAnnotation.axis().scale())
+          .yScale(this.ohlcAnnotation.axis().scale())
+          .xAnnotation(this.timeAnnotation)
+          .yAnnotation([this.ohlcAnnotation, this.percentAnnotation, this.volumeAnnotation])
+          .verticalWireRange([0, this.dim.plot.height])
+
+        this.macdCrosshair = techan.plot.crosshair()
+          .xScale(this.timeAnnotation.axis().scale())
+          .yScale(this.macdAnnotation.axis().scale())
+          .xAnnotation(this.timeAnnotation)
+          .yAnnotation([this.macdAnnotation, this.macdAnnotationLeft])
+          .verticalWireRange([0, this.dim.plot.height])
+
+        this.rsiCrosshair = techan.plot.crosshair()
+          .xScale(this.timeAnnotation.axis().scale())
+          .yScale(this.rsiAnnotation.axis().scale())
+          .xAnnotation(this.timeAnnotation)
+          .yAnnotation([this.rsiAnnotation, this.rsiAnnotationLeft])
+          .verticalWireRange([0, this.dim.plot.height])
+
     // OnInit End
   }
-
-
-
-  defs
-  svg
-
-  macdScale
-
-  rsiScale
-
-  indicatorSelection
-
-
-  macd = techan.plot.macd()
-    .xScale(this.x)
-    .yScale(this.macdScale)
-
-  macdAxis = d3.axisRight(this.macdScale)
-    .ticks(3)
-
-  macdAnnotation = techan.plot.axisannotation()
-    .axis(this.macdAxis)
-    .orient('right')
-    .format(d3.format(',.2f'))
-    .translate([this.x(1), 0])
-
-  macdAxisLeft = d3.axisLeft(this.macdScale)
-    .ticks(3)
-
-  macdAnnotationLeft = techan.plot.axisannotation()
-    .axis(this.macdAxisLeft)
-    .orient('left')
-    .format(d3.format(',.2f'))
-
-  rsi = techan.plot.rsi()
-    .xScale(this.x)
-    .yScale(this.rsiScale)
-
-  rsiAxis = d3.axisRight(this.rsiScale)
-    .ticks(3)
-
-  rsiAnnotation = techan.plot.axisannotation()
-    .axis(this.rsiAxis)
-    .orient('right')
-    .format(d3.format(',.2f'))
-    .translate([this.x(1), 0])
-
-  rsiAxisLeft = d3.axisLeft(this.rsiScale)
-    .ticks(3)
-
-  rsiAnnotationLeft = techan.plot.axisannotation()
-    .axis(this.rsiAxisLeft)
-    .orient('left')
-    .format(d3.format(',.2f'))
-
-  ohlcCrosshair = techan.plot.crosshair()
-    .xScale(this.timeAnnotation.axis().scale())
-    .yScale(this.ohlcAnnotation.axis().scale())
-    .xAnnotation(this.timeAnnotation)
-    .yAnnotation([this.ohlcAnnotation, this.percentAnnotation, this.volumeAnnotation])
-    .verticalWireRange([0, this.dim.plot.height])
-
-  macdCrosshair = techan.plot.crosshair()
-    .xScale(this.timeAnnotation.axis().scale())
-    .yScale(this.macdAnnotation.axis().scale())
-    .xAnnotation(this.timeAnnotation)
-    .yAnnotation([this.macdAnnotation, this.macdAnnotationLeft])
-    .verticalWireRange([0, this.dim.plot.height])
-
-  rsiCrosshair = techan.plot.crosshair()
-    .xScale(this.timeAnnotation.axis().scale())
-    .yScale(this.rsiAnnotation.axis().scale())
-    .xAnnotation(this.timeAnnotation)
-    .yAnnotation([this.rsiAnnotation, this.rsiAnnotationLeft])
-    .verticalWireRange([0, this.dim.plot.height])
-
+  macd
+  macdAxis
+  macdAnnotation
   ohlcSelection
+  // macdAnnotation
+  macdAxisLeft
+  macdAnnotationLeft
+  rsi
+  rsiAxis
+
+  rsiAnnotation
+  rsiAxisLeft
+  rsiAnnotationLeft
+  ohlcCrosshair
+  macdCrosshair
+  rsiCrosshair
+
 
 
   // this.d3.select("button").on("click", reset);
