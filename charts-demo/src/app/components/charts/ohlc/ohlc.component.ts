@@ -1,6 +1,7 @@
 import {
   Component,
   OnInit,
+  ViewEncapsulation,
 } from '@angular/core'
 
 import { OhlcDataset } from './ohlc-dataset'
@@ -11,6 +12,7 @@ import * as techan from 'techan'
   selector: 'app-ohlc',
   templateUrl: './ohlc.component.html',
   styleUrls: ['./ohlc.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class OhlcComponent implements OnInit {
 
@@ -260,13 +262,14 @@ export class OhlcComponent implements OnInit {
 
 
 
-
+  dateTimeFormat: string
 
 
   ngOnInit() {
     console.log('holla techan!', techan)
     console.log('holla d3!', d3)
 
+    this.dateTimeFormat = '%Y-%m-%d %H:%m'  // '2018-12-06 22:45'
     // debugger
 
     // this.d3
@@ -288,10 +291,10 @@ export class OhlcComponent implements OnInit {
     this.indicatorTop = d3.scaleLinear()
       .range([this.dim.indicator.top, this.dim.indicator.bottom])
 
-    this.parseDate = d3.timeParse('%Y-%m-%d %H:%m') //  date: '2018-12-09 21:15','%y-%m-%d %h:%m'
+    this.parseDate = d3.timeParse(this.dateTimeFormat) //  date: '2018-12-09 21:15','%y-%m-%d %h:%m'
 
     this.zoom = d3.zoom()
-      .on('zoom', this.zoomed)
+      .on('zoom', this.zoomed.bind(this))
 
     this.x = techan.scale.financetime()
       .range([0, this.dim.plot.width])
@@ -360,7 +363,8 @@ export class OhlcComponent implements OnInit {
     this.timeAnnotation = techan.plot.axisannotation()
       .axis(this.xAxis)
       .orient('bottom')
-      .format(d3.timeFormat('%Y-%m-%d'))
+      .format(d3.timeFormat(this.dateTimeFormat))
+      // .format(d3.timeFormat('%Y-%m-%d'))
       .width(65)
       .translate([0, this.dim.plot.height])
 
@@ -639,7 +643,7 @@ export class OhlcComponent implements OnInit {
 
     // d3.csv("data.csv", function (error, data) {
     const accessor = this.candlestick.accessor(),
-      indicatorPreRoll = 33  // Don't show where indicators don't have data
+      indicatorPreRoll = 0  // Don't show where indicators don't have data
 
     data = this.ohlcData.list.map( (d) => {
       const obj =  {
@@ -650,8 +654,9 @@ export class OhlcComponent implements OnInit {
         low: +d.low,
         close: +d.close,
         volume: +d.amount,
-      }
 
+      }
+      // debugger
       console.log('Holla obj: ', obj);
       return obj
 
@@ -673,10 +678,10 @@ export class OhlcComponent implements OnInit {
     ]
 
     const trades = [
-      { date: data[67].date, type: 'buy', price: data[67].low, low: data[67].low, high: data[67].high },
-      { date: data[100].date, type: 'sell', price: data[100].high, low: data[100].low, high: data[100].high },
-      { date: data[130].date, type: 'buy', price: data[130].low, low: data[130].low, high: data[130].high },
-      { date: data[170].date, type: 'sell', price: data[170].low, low: data[170].low, high: data[170].high },
+      { date: data[6].date, type: 'buy', price: data[6].low, low: data[6].low, high: data[6].high },
+      { date: data[7].date, type: 'sell', price: data[7].high, low: data[7].low, high: data[7].high },
+      { date: data[8].date, type: 'buy', price: data[8].low, low: data[8].low, high: data[8].high },
+      { date: data[5].date, type: 'sell', price: data[5].low, low: data[5].low, high: data[5].high },
     ]
 
     const macdData = techan.indicator.macd()(data)
@@ -711,20 +716,6 @@ export class OhlcComponent implements OnInit {
 
   }
 
-  reset() {
-    this.zoom.scale(1)
-    this.zoom.translate([0, 0])
-    this.draw()
-  }
-
-  zoomed() {
-    this.x.zoomable().domain(d3.event.transform.rescaleX(this.zoomableInit).domain())
-    this.y.domain(d3.event.transform.rescaleY(this.yInit).domain())
-    this.yPercent.domain(d3.event.transform.rescaleY(this.yPercentInit).domain())
-
-    this.draw()
-  }
-
   draw() {
     this.svg.select('g.x.axis').call(this.xAxis)
     this.svg.select('g.ohlc .axis').call(this.yAxis)
@@ -751,5 +742,19 @@ export class OhlcComponent implements OnInit {
     this.svg.select('g.supstances').call(this.supstance.refresh)
     this.svg.select('g.tradearrow').call(this.tradearrow.refresh)
   }
+  reset() {
+    this.zoom.scale(1)
+    this.zoom.translate([0, 0])
+    this.draw()
+  }
+
+  zoomed() {
+    this.x.zoomable().domain(d3.event.transform.rescaleX(this.zoomableInit).domain())
+    this.y.domain(d3.event.transform.rescaleY(this.yInit).domain())
+    this.yPercent.domain(d3.event.transform.rescaleY(this.yPercentInit).domain())
+
+    this.draw()
+  }
+
 
 }
