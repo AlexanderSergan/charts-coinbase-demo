@@ -267,7 +267,7 @@ export class OhlcComponent implements OnInit {
     console.log('holla techan!', techan)
     console.log('holla d3!', d3)
 
-    debugger
+    // debugger
 
     // this.d3
 
@@ -288,7 +288,7 @@ export class OhlcComponent implements OnInit {
     this.indicatorTop = d3.scaleLinear()
       .range([this.dim.indicator.top, this.dim.indicator.bottom])
 
-    this.parseDate = d3.timeParse('%d-%b-%y') //  date: '2018-12-09 21:15',
+    this.parseDate = d3.timeParse('%Y-%m-%d %H:%m') //  date: '2018-12-09 21:15','%y-%m-%d %h:%m'
 
     this.zoom = d3.zoom()
       .on('zoom', this.zoomed)
@@ -607,6 +607,8 @@ export class OhlcComponent implements OnInit {
           .yAnnotation([this.rsiAnnotation, this.rsiAnnotationLeft])
           .verticalWireRange([0, this.dim.plot.height])
 
+          this.showD3Chart()
+
     // OnInit End
   }
   macd
@@ -639,15 +641,20 @@ export class OhlcComponent implements OnInit {
     const accessor = this.candlestick.accessor(),
       indicatorPreRoll = 33  // Don't show where indicators don't have data
 
-    data = data.map(function (d) {
-      return {
-        date: this.parseDate(d.Date),
-        open: +d.Open,
-        high: +d.High,
-        low: +d.Low,
-        close: +d.Close,
-        volume: +d.Volume,
+    data = this.ohlcData.list.map( (d) => {
+      const obj =  {
+
+        date: this.parseDate(d.date),
+        open: +d.open,
+        high: +d.high,
+        low: +d.low,
+        close: +d.close,
+        volume: +d.amount,
       }
+
+      console.log('Holla obj: ', obj);
+      return obj
+
     }).sort(function (a, b) { return d3.ascending(accessor.d(a), accessor.d(b)) })
 
     this.x.domain(techan.scale.plot.time(data).domain())
