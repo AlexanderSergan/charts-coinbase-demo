@@ -266,13 +266,7 @@ export class OhlcComponent implements OnInit {
 
 
   ngOnInit() {
-    console.log('holla techan!', techan)
-    console.log('holla d3!', d3)
-
     this.dateTimeFormat = '%Y-%m-%d %H:%m'  // '2018-12-06 22:45'
-    // debugger
-
-    // this.d3
 
     this.dim = {
       width: 960, height: 500,
@@ -413,7 +407,7 @@ export class OhlcComponent implements OnInit {
       .range([this.indicatorTop(1) + this.dim.indicator.height, this.indicatorTop(1)])
 
 
-    this.svg = d3.select('body').append('svg')
+    this.svg = d3.select('app-ohlc').append('svg')
       .attr('width', this.dim.width)
       .attr('height', this.dim.height)
 
