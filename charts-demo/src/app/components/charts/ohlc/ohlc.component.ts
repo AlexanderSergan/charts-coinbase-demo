@@ -77,12 +77,12 @@ export class OhlcComponent implements OnInit {
         },
 
         {
-          amount: 2,
+          amount: 1,
           high: 15,
-          low: 15,
+          low: 5,
           date: '2018-12-09 07:27',
-          open: 5,
-          close: 15,
+          open: 10,
+          close: 3,
         },
 
         {
@@ -317,7 +317,7 @@ export class OhlcComponent implements OnInit {
     this.tradearrow = techan.plot.tradearrow()
       .xScale(this.x)
       .yScale(this.y)
-      .y(function (d) {
+      .y( (d) => {
         // Display the buy and sell arrows a bit above and below the price, so the price is still visible
         if (d.type === 'buy') {
           return this.y(d.low) + 5
@@ -643,7 +643,7 @@ export class OhlcComponent implements OnInit {
 
     // d3.csv("data.csv", function (error, data) {
     const accessor = this.candlestick.accessor(),
-      indicatorPreRoll = 0  // Don't show where indicators don't have data
+      indicatorPreRoll = 5  // Don't show where indicators don't have data
 
     data = this.ohlcData.list.map( (d) => {
       const obj =  {
@@ -707,7 +707,7 @@ export class OhlcComponent implements OnInit {
     this.svg.select('g.tradearrow').datum(trades).call(this.tradearrow)
 
     // Stash for zooming
-    const zoomableInit = this.x.zoomable().domain([indicatorPreRoll, data.length]).copy() // Zoom in a little to hide indicator preroll
+    this.zoomableInit = this.x.zoomable().domain([indicatorPreRoll, data.length]).copy() // Zoom in a little to hide indicator preroll
     this.yInit = this.y.copy()
     this.yPercentInit = this.yPercent.copy()
 
@@ -742,6 +742,8 @@ export class OhlcComponent implements OnInit {
     this.svg.select('g.supstances').call(this.supstance.refresh)
     this.svg.select('g.tradearrow').call(this.tradearrow.refresh)
   }
+
+
   reset() {
     this.zoom.scale(1)
     this.zoom.translate([0, 0])
