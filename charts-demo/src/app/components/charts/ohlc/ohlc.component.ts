@@ -4,6 +4,8 @@ import {
 } from '@angular/core'
 
 import { OhlcDataset } from './ohlc-dataset'
+import * as d3 from 'd3'
+import * as techan from 'techan'
 
 @Component({
   selector: 'app-ohlc',
@@ -212,6 +214,8 @@ export class OhlcComponent implements OnInit {
 
 
   ngOnInit() {
+    console.log('holla techan!', techan);
+
   }
 
 }

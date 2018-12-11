@@ -73,6 +73,9 @@
  * Zone JS is required by default for Angular itself.
  */
 import 'zone.js/dist/zone'  // Included with Angular CLI.
+import * as d3 from 'd3'
+
+(window as any).d3 = d3
 
 
 /***************************************************************************************************
