@@ -1,3 +1,4 @@
+import { SocketService } from './../socket.service'
 import {
   Component,
   OnInit,
@@ -16,7 +17,39 @@ import * as techan from 'techan'
 })
 export class OhlcComponent implements OnInit {
 
-  constructor() { }
+  socket
+  ioConnection
+  messages: any[]
+
+  constructor(socket: SocketService) {
+
+    this.socket = socket
+  }
+
+  // TODO: remove rci block
+
+
+  private initIoConnection(): void {
+    this.socket.initSocket();
+
+    this.ioConnection = this.socket.onMessage()
+      .subscribe((message: any) => {
+        this.messages.push(message);
+        console.log('messages updated: ', this.messages)
+      });
+
+    }
+
+    // this.socketService.onEvent(Event.CONNECT)
+    //   .subscribe(() => {
+    //     console.log('connected');
+    //   });
+
+    // this.socketService.onEvent(Event.DISCONNECT)
+    //   .subscribe(() => {
+    //     console.log('disconnected');
+    //   });
+
 
   ohlcData: OhlcDataset = {
     method: 'candleChart',
@@ -33,11 +66,11 @@ export class OhlcComponent implements OnInit {
 
         {
           amount: 6,
-          high: 2,
+          high: 5,
           low: 5,
           date: '2018-12-07 07:48',
           open: 2,
-          close: 5,
+          close: 4,
         },
 
         {
@@ -141,20 +174,20 @@ export class OhlcComponent implements OnInit {
 
         {
           amount: 2,
-          high: 2,
+          high: 10,
           low: 2,
           date: '2018-12-09 10:47',
-          open: 2,
-          close: 2,
+          open: 4,
+          close: 8,
         },
 
         {
-          amount: 2,
-          high: 1,
-          low: 1,
+          amount: 4,
+          high: 10,
+          low: 2,
           date: '2018-12-09 19:05',
-          open: 1,
-          close: 1,
+          open: 8,
+          close: 3,
         },
 
         {
@@ -249,24 +282,21 @@ export class OhlcComponent implements OnInit {
   percentAnnotation
   volumeAxis
   volumeAnnotation
-
-
   defs
   svg
-
   macdScale
-
   rsiScale
-
   indicatorSelection
-
 
 
   dateTimeFormat: string
 
 
   ngOnInit() {
-    this.dateTimeFormat = '%Y-%m-%d %H:%m'  // '2018-12-06 22:45'
+    // this.initIoConnection() //start socket messaging
+
+
+    this.dateTimeFormat = '%Y-%m-%d %H:%M'  // '2018-12-06 22:45'
 
     this.dim = {
       width: 960, height: 500,
@@ -607,6 +637,21 @@ export class OhlcComponent implements OnInit {
 
           this.showD3Chart()
 
+
+        // this.svg.append("g")
+        //       .attr("class", "grid")
+        //       .attr("transform", "translate(0," + this.dim.plot.height + ")")
+        //       .call(this.make_x_gridlines()
+        //           .tickSize(-this.dim.plot.height)
+        //           .tickFormat()
+        // );
+        // this.svg.append("g")
+        //       .attr("class", "grid")
+        //       .call(this.make_y_gridlines()
+        //           .tickSize(-this.dim.plot.width)
+        //           .tickFormat()
+        // );
+
     // OnInit End
   }
   macd
@@ -629,6 +674,18 @@ export class OhlcComponent implements OnInit {
 
 
   // this.d3.select("button").on("click", reset);
+
+
+  //  make_y_gridlines() {
+  //   return d3.axisLeft(this.y)
+  //       .ticks(10);
+  //  };
+
+  //  make_x_gridlines() {
+  //   return d3.axisBottom(this.x)
+  //       .ticks(10);
+  //  };
+
 
 
   showD3Chart() {
