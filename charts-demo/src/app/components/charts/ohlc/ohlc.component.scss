@@ -7,7 +7,7 @@ body {
 }
 
 text {
-  fill: #0a1119;
+  fill: white;
 }
 
 text.symbol {
@@ -161,6 +161,9 @@ path.zero {
 
 .crosshair {
   cursor: crosshair;
+}
+path.domain[stroke] {
+  stroke: white;
 }
 
 .crosshair path.wire {
