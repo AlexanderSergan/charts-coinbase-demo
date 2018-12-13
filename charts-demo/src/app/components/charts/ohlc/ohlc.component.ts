@@ -450,7 +450,7 @@ export class OhlcComponent implements OnInit {
     this.svg.append('text')
       .attr('class', 'symbol')
       .attr('x', 20)
-      .text('Facebook, Inc. (FB)')
+      .text('Coinbase OHLC Candlestick chart')
 
     this.svg.append('g')
       .attr('class', 'x axis')
