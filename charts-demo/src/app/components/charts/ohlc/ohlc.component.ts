@@ -1024,7 +1024,7 @@ export class OhlcComponent implements OnInit {
     this.dateTimeFormat = '%d-%b-%y'  // "23-Dec-13"
 
     this.dim = {
-      width: 960, height: 500,
+      width: 960, height: 365,
       margin: { top: 20, right: 50, bottom: 30, left: 50 },
       ohlc: { height: 305 },
       indicator: { height: 65, padding: 5 },
@@ -1152,12 +1152,6 @@ export class OhlcComponent implements OnInit {
       .width(35)
 
 
-
-    this.macdScale = d3.scaleLinear()
-      .range([this.indicatorTop(0) + this.dim.indicator.height, this.indicatorTop(0)])
-
-
-
     this.svg = d3.select('app-ohlc').append('svg')
       .attr('width', this.dim.width)
       .attr('height', this.dim.height)
@@ -1249,22 +1243,22 @@ export class OhlcComponent implements OnInit {
 
 
 
+// //
+//     this.indicatorSelection = this.svg.selectAll('svg > g.indicator').data([]).enter()
+//       .append('g')
+//       .attr('class', function (d) { return d + ' indicator' })
 
-    this.indicatorSelection = this.svg.selectAll('svg > g.indicator').data(['macd']).enter()
-      .append('g')
-      .attr('class', function (d) { return d + ' indicator' })
+//     this.indicatorSelection.append('g')
+//       .attr('class', 'axis right')
+//       .attr('transform', 'translate(' + this.x(1) + ',0)')
 
-    this.indicatorSelection.append('g')
-      .attr('class', 'axis right')
-      .attr('transform', 'translate(' + this.x(1) + ',0)')
+//     this.indicatorSelection.append('g')
+//       .attr('class', 'axis left')
+//       .attr('transform', 'translate(' + this.x(0) + ',0)')
 
-    this.indicatorSelection.append('g')
-      .attr('class', 'axis left')
-      .attr('transform', 'translate(' + this.x(0) + ',0)')
-
-    this.indicatorSelection.append('g')
-      .attr('class', 'indicator-plot')
-      .attr('clip-path', function (d, i) { return 'url(#indicatorClip-' + i + ')' })
+//     this.indicatorSelection.append('g')
+//       .attr('class', 'indicator-plot')
+//       .attr('clip-path', function (d, i) { return 'url(#indicatorClip-' + i + ')' })
 
 
 
@@ -1277,8 +1271,8 @@ export class OhlcComponent implements OnInit {
       .attr('class', 'tradearrow')
       .attr('clip-path', 'url(#ohlcClip)')
 
-    this.svg.append('g')
-      .attr('class', 'crosshair macd')
+    // this.svg.append('g')
+    //   .attr('class', 'crosshair macd')
 
 
     this.svg.append('g')
@@ -1290,26 +1284,26 @@ export class OhlcComponent implements OnInit {
 
 
 
-        this.macd = techan.plot.macd()
-          .xScale(this.x)
-          .yScale(this.macdScale)
+        // this.macd = techan.plot.macd()
+        //   .xScale(this.x)
+        //   .yScale(this.macdScale)
 
-        this.macdAxis = d3.axisRight(this.macdScale)
-          .ticks(3)
+        // this.macdAxis = d3.axisRight(this.macdScale)
+        //   .ticks(3)
 
-        this.macdAnnotation = techan.plot.axisannotation()
-          .axis(this.macdAxis)
-          .orient('right')
-          .format(d3.format(',.2f'))
-          .translate([this.x(1), 0])
+        // this.macdAnnotation = techan.plot.axisannotation()
+        //   .axis(this.macdAxis)
+        //   .orient('right')
+        //   .format(d3.format(',.2f'))
+        //   .translate([this.x(1), 0])
 
-        this.macdAxisLeft = d3.axisLeft(this.macdScale)
-          .ticks(3)
+        // this.macdAxisLeft = d3.axisLeft(this.macdScale)
+        //   .ticks(3)
 
-        this.macdAnnotationLeft = techan.plot.axisannotation()
-          .axis(this.macdAxisLeft)
-          .orient('left')
-          .format(d3.format(',.2f'))
+        // this.macdAnnotationLeft = techan.plot.axisannotation()
+        //   .axis(this.macdAxisLeft)
+        //   .orient('left')
+        //   .format(d3.format(',.2f'))
 
 
 
@@ -1323,12 +1317,12 @@ export class OhlcComponent implements OnInit {
           .yAnnotation([this.ohlcAnnotation, this.percentAnnotation, this.volumeAnnotation])
           .verticalWireRange([0, this.dim.plot.height])
 
-        this.macdCrosshair = techan.plot.crosshair()
-          .xScale(this.timeAnnotation.axis().scale())
-          .yScale(this.macdAnnotation.axis().scale())
-          .xAnnotation(this.timeAnnotation)
-          .yAnnotation([this.macdAnnotation, this.macdAnnotationLeft])
-          .verticalWireRange([0, this.dim.plot.height])
+        // this.macdCrosshair = techan.plot.crosshair()
+        //   // .xScale(this.timeAnnotation.axis().scale())
+        //   // .yScale(this.macdAnnotation.axis().scale())
+        //   .xAnnotation(this.timeAnnotation)
+        //   .yAnnotation([this.macdAnnotation, this.macdAnnotationLeft])
+        //   .verticalWireRange([0, this.dim.plot.height])
 
 
           this.showD3Chart()
@@ -1396,7 +1390,7 @@ export class OhlcComponent implements OnInit {
     ]
 
     const macdData = techan.indicator.macd()(data)
-    this.macdScale.domain(techan.scale.plot.macd(macdData).domain())
+    // this.macdScale.domain(techan.scale.plot.macd(macdData).domain())
 
     this.svg.select('g.candlestick').datum(data).call(this.candlestick)
     this.svg.select('g.close.annotation').datum([data[data.length - 1]]).call(this.closeAnnotation)
@@ -1404,10 +1398,10 @@ export class OhlcComponent implements OnInit {
     this.svg.select('g.sma.ma-0').datum(techan.indicator.sma().period(10)(data)).call(this.sma0)
     this.svg.select('g.sma.ma-1').datum(techan.indicator.sma().period(20)(data)).call(this.sma1)
     this.svg.select('g.ema.ma-2').datum(techan.indicator.ema().period(50)(data)).call(this.ema2)
-    this.svg.select('g.macd .indicator-plot').datum(macdData).call(this.macd)
+    // this.svg.select('g.macd .indicator-plot').datum(macdData).call(this.macd)
 
     this.svg.select('g.crosshair.ohlc').call(this.ohlcCrosshair).call(this.zoom)
-    this.svg.select('g.crosshair.macd').call(this.macdCrosshair).call(this.zoom)
+    // this.svg.select('g.crosshair.macd').call(this.macdCrosshair).call(this.zoom)
     this.svg.select('g.trendlines').datum(trendlineData).call(this.trendline).call(this.trendline.drag)
     this.svg.select('g.supstances').datum(supstanceData).call(this.supstance).call(this.supstance.drag)
 
@@ -1426,8 +1420,8 @@ export class OhlcComponent implements OnInit {
     this.svg.select('g.ohlc .axis').call(this.yAxis)
     this.svg.select('g.volume.axis').call(this.volumeAxis)
     this.svg.select('g.percent.axis').call(this.percentAxis)
-    this.svg.select('g.macd .axis.right').call(this.macdAxis)
-    this.svg.select('g.macd .axis.left').call(this.macdAxisLeft)
+    // this.svg.select('g.macd .axis.right').call(this.macdAxis)
+    // this.svg.select('g.macd .axis.left').call(this.macdAxisLeft)
 
     this.svg.select('g.close.annotation').call(this.closeAnnotation.refresh)
     this.svg.select('g.candlestick').call(this.candlestick.refresh)
@@ -1435,9 +1429,9 @@ export class OhlcComponent implements OnInit {
     this.svg.select('g .sma.ma-0').call(this.sma0.refresh)
     this.svg.select('g .sma.ma-1').call(this.sma1.refresh)
     this.svg.select('g .ema.ma-2').call(this.ema2.refresh)
-    this.svg.select('g.macd .indicator-plot').call(this.macd.refresh)
+    // this.svg.select('g.macd .indicator-plot').call(this.macd.refresh)
     this.svg.select('g.crosshair.ohlc').call(this.ohlcCrosshair.refresh)
-    this.svg.select('g.crosshair.macd').call(this.macdCrosshair.refresh)
+    // this.svg.select('g.crosshair.macd').call(this.macdCrosshair.refresh)
     this.svg.select('g.trendlines').call(this.trendline.refresh)
     this.svg.select('g.supstances').call(this.supstance.refresh)
     this.svg.select('g.tradearrow').call(this.tradearrow.refresh)
