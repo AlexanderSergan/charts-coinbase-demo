@@ -40,15 +40,7 @@ export class OhlcComponent implements OnInit {
 
   //   }
 
-    // this.socketService.onEvent(Event.CONNECT)
-    //   .subscribe(() => {
-    //     console.log('connected');
-    //   });
 
-    // this.socketService.onEvent(Event.DISCONNECT)
-    //   .subscribe(() => {
-    //     console.log('disconnected');
-    //   });
 
 
   ohlcData: OhlcDataset = {
@@ -1027,10 +1019,8 @@ export class OhlcComponent implements OnInit {
 
 
   ngOnInit() {
-    // this.initIoConnection() //start socket messaging
 
 
-    // this.dateTimeFormat = '%Y-%m-%d %H:%M'  // '2018-12-06 22:45'
     this.dateTimeFormat = '%d-%b-%y'  // "23-Dec-13"
 
     this.dim = {
@@ -1077,7 +1067,6 @@ export class OhlcComponent implements OnInit {
       .xScale(this.x)
       .yScale(this.y)
       .y( (d) => {
-        // Display the buy and sell arrows a bit above and below the price, so the price is still visible
         if (d.type === 'buy') {
           return this.y(d.low) + 5
         }
@@ -1123,7 +1112,6 @@ export class OhlcComponent implements OnInit {
       .axis(this.xAxis)
       .orient('bottom')
       .format(d3.timeFormat(this.dateTimeFormat))
-      // .format(d3.timeFormat('%Y-%m-%d'))
       .width(65)
       .translate([0, this.dim.plot.height])
 
@@ -1168,8 +1156,6 @@ export class OhlcComponent implements OnInit {
     this.macdScale = d3.scaleLinear()
       .range([this.indicatorTop(0) + this.dim.indicator.height, this.indicatorTop(0)])
 
-    // this.rsiScale = this.macdScale.copy()
-    //   .range([this.indicatorTop(1) + this.dim.indicator.height, this.indicatorTop(1)])
 
 
     this.svg = d3.select('app-ohlc').append('svg')
@@ -1284,7 +1270,6 @@ export class OhlcComponent implements OnInit {
 
 
 
-    // Add trendlines and other interactions last to be above zoom pane
     this.svg.append('g')
       .attr('class', 'crosshair ohlc')
 
@@ -1295,8 +1280,6 @@ export class OhlcComponent implements OnInit {
     this.svg.append('g')
       .attr('class', 'crosshair macd')
 
-    // this.svg.append('g')
-    //   .attr('class', 'crosshair rsi')
 
     this.svg.append('g')
       .attr('class', 'trendlines analysis')
@@ -1328,26 +1311,10 @@ export class OhlcComponent implements OnInit {
           .orient('left')
           .format(d3.format(',.2f'))
 
-        // this.rsi = techan.plot.rsi()
-        //   .xScale(this.x)
-        //   .yScale(this.rsiScale)
 
-        // this.rsiAxis = d3.axisRight(this.rsiScale)
-        //   .ticks(3)
 
-        // this.rsiAnnotation = techan.plot.axisannotation()
-        //   .axis(this.rsiAxis)
-        //   .orient('right')
-        //   .format(d3.format(',.2f'))
-        //   .translate([this.x(1), 0])
 
-        // this.rsiAxisLeft = d3.axisLeft(this.rsiScale)
-        //   .ticks(3)
 
-        // this.rsiAnnotationLeft = techan.plot.axisannotation()
-        //   .axis(this.rsiAxisLeft)
-        //   .orient('left')
-        //   .format(d3.format(',.2f'))
 
         this.ohlcCrosshair = techan.plot.crosshair()
           .xScale(this.timeAnnotation.axis().scale())
@@ -1363,63 +1330,23 @@ export class OhlcComponent implements OnInit {
           .yAnnotation([this.macdAnnotation, this.macdAnnotationLeft])
           .verticalWireRange([0, this.dim.plot.height])
 
-        // this.rsiCrosshair = techan.plot.crosshair()
-        //   .xScale(this.timeAnnotation.axis().scale())
-        //   .yScale(this.rsiAnnotation.axis().scale())
-        //   .xAnnotation(this.timeAnnotation)
-        //   .yAnnotation([this.rsiAnnotation, this.rsiAnnotationLeft])
-        //   .verticalWireRange([0, this.dim.plot.height])
 
           this.showD3Chart()
 
 
-        // this.svg.append("g")
-        //       .attr("class", "grid")
-        //       .attr("transform", "translate(0," + this.dim.plot.height + ")")
-        //       .call(this.make_x_gridlines()
-        //           .tickSize(-this.dim.plot.height)
-        //           .tickFormat()
-        // );
-        // this.svg.append("g")
-        //       .attr("class", "grid")
-        //       .call(this.make_y_gridlines()
-        //           .tickSize(-this.dim.plot.width)
-        //           .tickFormat()
-        // );
 
-    // OnInit End
   }
   macd
   macdAxis
   macdAnnotation
   ohlcSelection
-  // macdAnnotation
   macdAxisLeft
   macdAnnotationLeft
-  rsi
-  rsiAxis
 
-  rsiAnnotation
-  rsiAxisLeft
-  rsiAnnotationLeft
   ohlcCrosshair
   macdCrosshair
   rsiCrosshair
 
-
-
-  // this.d3.select("button").on("click", reset);
-
-
-  //  make_y_gridlines() {
-  //   return d3.axisLeft(this.y)
-  //       .ticks(10);
-  //  };
-
-  //  make_x_gridlines() {
-  //   return d3.axisBottom(this.x)
-  //       .ticks(10);
-  //  };
 
 
 
@@ -1427,7 +1354,6 @@ export class OhlcComponent implements OnInit {
 
     let data: any[]
 
-    // d3.csv("data.csv", function (error, data) {
     const accessor = this.candlestick.accessor(),
       indicatorPreRoll = 5  // Don't show where indicators don't have data
 
@@ -1442,7 +1368,6 @@ export class OhlcComponent implements OnInit {
         volume: +d.amount,
 
       }
-      // debugger
       console.log('Holla obj: ', obj);
       return obj
 
@@ -1472,8 +1397,6 @@ export class OhlcComponent implements OnInit {
 
     const macdData = techan.indicator.macd()(data)
     this.macdScale.domain(techan.scale.plot.macd(macdData).domain())
-    // const rsiData = techan.indicator.rsi()(data)
-    // this.rsiScale.domain(techan.scale.plot.rsi(rsiData).domain())
 
     this.svg.select('g.candlestick').datum(data).call(this.candlestick)
     this.svg.select('g.close.annotation').datum([data[data.length - 1]]).call(this.closeAnnotation)
@@ -1482,23 +1405,19 @@ export class OhlcComponent implements OnInit {
     this.svg.select('g.sma.ma-1').datum(techan.indicator.sma().period(20)(data)).call(this.sma1)
     this.svg.select('g.ema.ma-2').datum(techan.indicator.ema().period(50)(data)).call(this.ema2)
     this.svg.select('g.macd .indicator-plot').datum(macdData).call(this.macd)
-    // this.svg.select('g.rsi .indicator-plot').datum(rsiData).call(this.rsi)
 
     this.svg.select('g.crosshair.ohlc').call(this.ohlcCrosshair).call(this.zoom)
     this.svg.select('g.crosshair.macd').call(this.macdCrosshair).call(this.zoom)
-    // this.svg.select('g.crosshair.rsi').call(this.rsiCrosshair).call(this.zoom)
     this.svg.select('g.trendlines').datum(trendlineData).call(this.trendline).call(this.trendline.drag)
     this.svg.select('g.supstances').datum(supstanceData).call(this.supstance).call(this.supstance.drag)
 
     this.svg.select('g.tradearrow').datum(trades).call(this.tradearrow)
 
-    // Stash for zooming
     this.zoomableInit = this.x.zoomable().domain([indicatorPreRoll, data.length]).copy() // Zoom in a little to hide indicator preroll
     this.yInit = this.y.copy()
     this.yPercentInit = this.yPercent.copy()
 
     this.draw()
-    // });
 
   }
 
@@ -1508,11 +1427,8 @@ export class OhlcComponent implements OnInit {
     this.svg.select('g.volume.axis').call(this.volumeAxis)
     this.svg.select('g.percent.axis').call(this.percentAxis)
     this.svg.select('g.macd .axis.right').call(this.macdAxis)
-    // this.svg.select('g.rsi .axis.right').call(this.rsiAxis)
     this.svg.select('g.macd .axis.left').call(this.macdAxisLeft)
-    // this.svg.select('g.rsi .axis.left').call(this.rsiAxisLeft)
 
-    // We know the data does not change, a simple refresh that does not perform data joins will suffice.
     this.svg.select('g.close.annotation').call(this.closeAnnotation.refresh)
     this.svg.select('g.candlestick').call(this.candlestick.refresh)
     this.svg.select('g.volume').call(this.volume.refresh)
@@ -1520,10 +1436,8 @@ export class OhlcComponent implements OnInit {
     this.svg.select('g .sma.ma-1').call(this.sma1.refresh)
     this.svg.select('g .ema.ma-2').call(this.ema2.refresh)
     this.svg.select('g.macd .indicator-plot').call(this.macd.refresh)
-    // this.svg.select('g.rsi .indicator-plot').call(this.rsi.refresh)
     this.svg.select('g.crosshair.ohlc').call(this.ohlcCrosshair.refresh)
     this.svg.select('g.crosshair.macd').call(this.macdCrosshair.refresh)
-    // this.svg.select('g.crosshair.rsi').call(this.rsiCrosshair.refresh)
     this.svg.select('g.trendlines').call(this.trendline.refresh)
     this.svg.select('g.supstances').call(this.supstance.refresh)
     this.svg.select('g.tradearrow').call(this.tradearrow.refresh)
