@@ -1,6 +1,6 @@
 {
   "name": "charts-demo",
-  "alias": ["charts.200kph.io"],
+  "alias": ["coinbase-demo.200kph.io"],
   "version": 1,
   "env": {
     "NODE_ENV": "production"

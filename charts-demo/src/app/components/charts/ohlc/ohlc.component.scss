@@ -1,8 +1,13 @@
-$color-transparent: rgba(55, 255, 255, 0);
+$color-transparent: #37ffff00;
+$color-background: #0a1119;
 
+
+body {
+  background-color: $color-background;
+}
 
 text {
-  fill: #000;
+  fill: #0a1119;
 }
 
 text.symbol {
@@ -86,17 +91,20 @@ path.rsi {
   stroke: #000000;
 }
 
-path.overbought, path.oversold {
+path.overbought,
+path.oversold {
   stroke: #FF9999;
   stroke-dasharray: 5, 5;
 }
 
-path.middle, path.zero {
+path.middle,
+path.zero {
   stroke: #BBBBBB;
   stroke-dasharray: 5, 5;
 }
 
-.analysis path, .analysis circle {
+.analysis path,
+.analysis circle {
   stroke: blue;
   stroke-width: 0.8;
 }
@@ -115,11 +123,13 @@ path.middle, path.zero {
   display: inline;
 }
 
-.dragging .trendline path, .dragging .trendline circle {
+.dragging .trendline path,
+.dragging .trendline circle {
   stroke: darkblue;
 }
 
-.interaction path, .interaction circle {
+.interaction path,
+.interaction circle {
   pointer-events: all;
 }
 
@@ -127,7 +137,8 @@ path.middle, path.zero {
   cursor: move;
 }
 
-.trendlines .interaction .start, .trendlines .interaction .end {
+.trendlines .interaction .start,
+.trendlines .interaction .end {
   cursor: nwse-resize;
 }
 
