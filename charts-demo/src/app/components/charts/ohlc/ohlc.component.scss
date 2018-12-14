@@ -102,6 +102,10 @@ path.oversold {
   stroke-dasharray: 5, 5;
 }
 
+path.candle.body {
+  stroke-width: 0;
+}
+
 path.middle,
 path.zero {
   stroke: #BBBBBB;

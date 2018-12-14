@@ -991,8 +991,6 @@ export class OhlcComponent implements OnInit {
   tradearrow
 
 
-
-
   sma0
   sma1
   ema2
@@ -1016,6 +1014,8 @@ export class OhlcComponent implements OnInit {
 
 
   dateTimeFormat: string
+
+// TODO: remove trendlines
 
 
   ngOnInit() {
@@ -1282,6 +1282,19 @@ export class OhlcComponent implements OnInit {
       .attr('class', 'supstances analysis')
       .attr('clip-path', 'url(#ohlcClip)')
 
+    //   this.svg.append("g")
+    //   .attr("class", "grid")
+    //   .attr("transform", "translate(0," + this.dim.height + ")")
+    //   .call(this.make_x_gridlines()
+    //       .tickSize(-this.dim.height)
+    //       .tickFormat()
+    // );
+    // this.svg.append("g")
+    //   .attr("class", "grid")
+    //   .call(this.make_y_gridlines()
+    //       .tickSize(-this.dim.width)
+    //       .tickFormat()
+    // );
 
 
         // this.macd = techan.plot.macd()
@@ -1342,6 +1355,15 @@ export class OhlcComponent implements OnInit {
   rsiCrosshair
 
 
+//    make_y_gridlines() {
+//     return d3.axisLeft(this.dim.y)
+//         .ticks(10);
+// };
+
+//  make_x_gridlines() {
+//     return d3.axisBottom(this.dim.x)
+//         .ticks(10);
+// };
 
 
   showD3Chart() {
@@ -1372,15 +1394,15 @@ export class OhlcComponent implements OnInit {
     this.yPercent.domain(techan.scale.plot.percent(this.y, accessor(data[indicatorPreRoll])).domain())
     this.yVolume.domain(techan.scale.plot.volume(data).domain())
 
-    const trendlineData = [
-      { start: { date: new Date(2014, 2, 11), value: 72.50 }, end: { date: new Date(2014, 5, 9), value: 63.34 } },
-      { start: { date: new Date(2013, 10, 21), value: 43 }, end: { date: new Date(2014, 2, 17), value: 70.50 } },
-    ]
+    // const trendlineData = [
+    //   { start: { date: new Date(2014, 2, 11), value: 72.50 }, end: { date: new Date(2014, 5, 9), value: 63.34 } },
+    //   { start: { date: new Date(2013, 10, 21), value: 43 }, end: { date: new Date(2014, 2, 17), value: 70.50 } },
+    // ]
 
-    const supstanceData = [
-      { start: new Date(2014, 2, 11), end: new Date(2014, 5, 9), value: 63.64 },
-      { start: new Date(2013, 10, 21), end: new Date(2014, 2, 17), value: 55.50 },
-    ]
+    // const supstanceData = [
+    //   { start: new Date(2014, 2, 11), end: new Date(2014, 5, 9), value: 63.64 },
+    //   { start: new Date(2013, 10, 21), end: new Date(2014, 2, 17), value: 55.50 },
+    // ]
 
     const trades = [
       { date: data[6].date, type: 'buy', price: data[6].low, low: data[6].low, high: data[6].high },
@@ -1396,16 +1418,16 @@ export class OhlcComponent implements OnInit {
     this.svg.select('g.close.annotation').datum([data[data.length - 1]]).call(this.closeAnnotation)
     this.svg.select('g.volume').datum(data).call(this.volume)
     this.svg.select('g.sma.ma-0').datum(techan.indicator.sma().period(10)(data)).call(this.sma0)
-    this.svg.select('g.sma.ma-1').datum(techan.indicator.sma().period(20)(data)).call(this.sma1)
-    this.svg.select('g.ema.ma-2').datum(techan.indicator.ema().period(50)(data)).call(this.ema2)
+    // this.svg.select('g.sma.ma-1').datum(techan.indicator.sma().period(20)(data)).call(this.sma1)
+    // this.svg.select('g.ema.ma-2').datum(techan.indicator.ema().period(50)(data)).call(this.ema2)
     // this.svg.select('g.macd .indicator-plot').datum(macdData).call(this.macd)
 
     this.svg.select('g.crosshair.ohlc').call(this.ohlcCrosshair).call(this.zoom)
     // this.svg.select('g.crosshair.macd').call(this.macdCrosshair).call(this.zoom)
-    this.svg.select('g.trendlines').datum(trendlineData).call(this.trendline).call(this.trendline.drag)
-    this.svg.select('g.supstances').datum(supstanceData).call(this.supstance).call(this.supstance.drag)
+    // this.svg.select('g.trendlines').datum(trendlineData).call(this.trendline).call(this.trendline.drag)
+    // this.svg.select('g.supstances').datum(supstanceData).call(this.supstance).call(this.supstance.drag)
 
-    this.svg.select('g.tradearrow').datum(trades).call(this.tradearrow)
+    // this.svg.select('g.tradearrow').datum(trades).call(this.tradearrow)
 
     this.zoomableInit = this.x.zoomable().domain([indicatorPreRoll, data.length]).copy() // Zoom in a little to hide indicator preroll
     this.yInit = this.y.copy()
@@ -1434,7 +1456,7 @@ export class OhlcComponent implements OnInit {
     // this.svg.select('g.crosshair.macd').call(this.macdCrosshair.refresh)
     this.svg.select('g.trendlines').call(this.trendline.refresh)
     this.svg.select('g.supstances').call(this.supstance.refresh)
-    this.svg.select('g.tradearrow').call(this.tradearrow.refresh)
+    // this.svg.select('g.tradearrow').call(this.tradearrow.refresh)
   }
 
 
