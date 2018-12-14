@@ -6,7 +6,7 @@ import { Observable } from 'rxjs'
 
 import * as socketIo from 'socket.io-client'
 
-const SERVER_URL = 'wss://ws-feed.pro.coinbase.com'
+const SERVER_URL = '0.0.0.0:8000'
 @Injectable({
   providedIn: 'root',
 })
@@ -20,14 +20,32 @@ export class SocketService implements OnInit {
   }
 
   constructor() { }
-  private socket
+  public socket
 
   public initSocket(): void {
-      this.socket = socketIo(SERVER_URL)
+      this.socket = socketIo('http://localhost:8000/events')
+
+      .on('connection', () => {
+
+        console.log('connected to somebody!')
+        this.send('privet, server!')
+      } )
+      // const namespace = this.socket.of('namespace')
+
   }
 
   public send(message: any): void {
       this.socket.emit('message', message)
+  }
+
+
+  public onOHLCData(): Observable<any> {
+      return new Observable<any>(observer => {
+        this.socket.on('ohlc', (data: any) => {
+          console.log('Got OHLC data from server!: ', data);
+          return observer.next(data)
+        })
+    })
   }
 
   public onMessage(): Observable<any> {

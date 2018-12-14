@@ -8,6 +8,7 @@ import {
 import { OhlcDataset } from './ohlc-dataset'
 import * as d3 from 'd3'
 import * as techan from 'techan'
+import { Ohlc } from './ohlc';
 
 @Component({
   selector: 'app-ohlc',
@@ -101,7 +102,23 @@ export class OhlcComponent implements OnInit {
 
   dateTimeFormat: string
 
+  appendLastItem() {
+
+    // const last: Ohlc = this.ohlcData.list[this.ohlcData.list.length - 1]
+
+    // let date = last.date.split('-')
+
+    // date =
+
+    // this.ohlcData.list.push(this.ohlcData.list[this.ohlcData.list.length - 1])
+  }
+
   ngOnInit() {
+
+    this.socket.initSocket()
+
+    this.socket.send('privet!')
+    this.socket.onOHLCData().subscribe( data => console.log('yeboi ohlc data in the component: ', data))
 
     this.dateTimeFormat = '%d-%b-%y'  // "23-Dec-13"
 
@@ -365,6 +382,13 @@ export class OhlcComponent implements OnInit {
     this.showD3Chart()
 
 
+    // setInterval(() => {
+
+    //   this.appendLastItem()
+    //   this.showD3Chart()
+
+    // }, 2000)
+
     /**
      * OnInit function end
     */
@@ -390,7 +414,7 @@ export class OhlcComponent implements OnInit {
         volume: +d.amount,
 
       }
-      console.log('Holla obj: ', obj)
+      // console.log('Holla obj: ', obj)
       return obj
 
     }).sort(function (a, b) { return d3.ascending(accessor.d(a), accessor.d(b)) })
