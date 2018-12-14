@@ -96,6 +96,14 @@ path.rsi {
   stroke: #000000;
 }
 
+g.grid-lines line {
+  stroke: #232730;
+}
+
+.volume path {
+  fill: rgba(146, 146, 146, .26);
+}
+
 path.overbought,
 path.oversold {
   stroke: #FF9999;
@@ -207,4 +215,13 @@ path.domain[stroke] {
 
 .tradearrow path.highlight.sell {
   stroke: #9900FF;
+}
+
+.crosshair .axisannotation path {
+  fill: #1c2a35;
+}
+
+.crosshair .axisannotation text {
+  fill: white;
+  lengthAdjust: spacingAndGlyphs;
 }

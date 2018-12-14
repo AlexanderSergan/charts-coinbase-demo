@@ -230,14 +230,34 @@ export class OhlcComponent implements OnInit {
       .orient('right')
       .width(35)
 
-
-    this.svg = d3.select('app-ohlc').append('svg')
+      this.svg = d3.select('app-ohlc').append('svg')
       .attr('width', this.dim.width)
       .attr('height', this.dim.height)
 
 
-    this.svg = this.svg.append('g')
+      this.svg = this.svg.append('g')
       .attr('transform', 'translate(' + this.dim.margin.left + ',' + this.dim.margin.top + ')')
+
+      // render grid lines
+
+      this.xGridScale = d3.scaleLinear().range([0, this.dim.plot.width])
+      this.yGridScale = d3.scaleLinear().range([this.dim.plot.height, 0])
+
+      this.svg.append('g')
+      .attr('class', 'grid grid-lines')
+      .attr('transform', `translate(0, ${this.dim.plot.height})`)
+      .call(this.make_x_gridlines()
+          .tickSize(-this.dim.plot.height)
+          .tickFormat(null),
+      )
+
+    // add the Y gridlines
+    this.svg.append('g')
+      .attr('class', 'grid grid-lines')
+      .call(this.make_y_gridlines()
+          .tickSize(-this.dim.plot.width)
+          .tickFormat(null),
+      )
 
     this.svg.append('text')
       .attr('class', 'symbol')
@@ -333,16 +353,13 @@ export class OhlcComponent implements OnInit {
 
 
 
-    this.ohlcCrosshair = techan.plot.crosshair()
+      this.ohlcCrosshair = techan.plot.crosshair()
       .xScale(this.timeAnnotation.axis().scale())
       .yScale(this.ohlcAnnotation.axis().scale())
       .xAnnotation(this.timeAnnotation)
       .yAnnotation([this.ohlcAnnotation, this.percentAnnotation, this.volumeAnnotation])
       .verticalWireRange([0, this.dim.plot.height])
 
-
-      this.xGridScale = d3.scaleTime().range([0, this.dim.plot.width])
-      this.yGridScale = d3.scaleLinear().range([this.dim.plot.height, 0])
 
 
     this.showD3Chart()
@@ -351,31 +368,7 @@ export class OhlcComponent implements OnInit {
     /**
      * OnInit function end
     */
-   this.svg.append("g")
-   .attr("class", "grid")
-   .attr("transform", "translate(0," + this.dim.plot.height + ")")
-   .call(this.make_x_gridlines()
-       .tickSize(-this.dim.plot.height)
-       .tickFormat(null)
-   )
-
-// add the Y gridlines
-this.svg.append("g")
-   .attr("class", "grid")
-   .call(this.make_y_gridlines()
-       .tickSize(-this.dim.plot.width)
-       .tickFormat(null)
-   )
-    // this.appendGridX(20)
   }
-
-
-
-  // appendGridX(offset = 0) {
-  //   this.svg.append('g')
-  //     .attr('class', 'axis grid-axis')
-  //     .attr('transform', `translate(${offset} ,0)`)
-  // }
 
 
 
@@ -472,7 +465,7 @@ this.svg.append("g")
 // gridlines in x axis function
  make_x_gridlines() {
     return d3.axisBottom(this.xGridScale)
-        .ticks(5)
+        .ticks(10)
 }
 
 // gridlines in y axis function
