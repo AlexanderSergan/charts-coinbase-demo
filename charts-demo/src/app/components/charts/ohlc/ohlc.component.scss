@@ -221,7 +221,9 @@ path.domain[stroke] {
   fill: #1c2a35;
 }
 
-.crosshair .axisannotation text {
+.crosshair .axisannotation g.data text {
   fill: white;
-  lengthAdjust: spacingAndGlyphs;
+  font: 10px sans-serif;
+  text-anchor: middle;
+
 }
