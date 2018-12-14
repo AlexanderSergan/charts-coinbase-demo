@@ -94,6 +94,9 @@ export class OhlcComponent implements OnInit {
   macdCrosshair
   rsiCrosshair
 
+  xGridScale
+  yGridScale
+
 
 
   dateTimeFormat: string
@@ -184,6 +187,7 @@ export class OhlcComponent implements OnInit {
       .yScale(this.y)
 
     this.xAxis = d3.axisBottom(this.x)
+
 
     this.timeAnnotation = techan.plot.axisannotation()
       .axis(this.xAxis)
@@ -282,8 +286,7 @@ export class OhlcComponent implements OnInit {
       .style('text-anchor', 'end')
       .text('Price ($)')
 
-    this.ohlcSelection.append('g')
-      .attr('class', 'close annotation up')
+
 
     this.ohlcSelection.append('g')
       .attr('class', 'volume')
@@ -338,15 +341,41 @@ export class OhlcComponent implements OnInit {
       .verticalWireRange([0, this.dim.plot.height])
 
 
+      this.xGridScale = d3.scaleTime().range([0, this.dim.plot.width])
+      this.yGridScale = d3.scaleLinear().range([this.dim.plot.height, 0])
+
+
     this.showD3Chart()
 
 
     /**
      * OnInit function end
     */
+   this.svg.append("g")
+   .attr("class", "grid")
+   .attr("transform", "translate(0," + this.dim.plot.height + ")")
+   .call(this.make_x_gridlines()
+       .tickSize(-this.dim.plot.height)
+       .tickFormat(null)
+   )
+
+// add the Y gridlines
+this.svg.append("g")
+   .attr("class", "grid")
+   .call(this.make_y_gridlines()
+       .tickSize(-this.dim.plot.width)
+       .tickFormat(null)
+   )
+    // this.appendGridX(20)
   }
 
 
+
+  // appendGridX(offset = 0) {
+  //   this.svg.append('g')
+  //     .attr('class', 'axis grid-axis')
+  //     .attr('transform', `translate(${offset} ,0)`)
+  // }
 
 
 
@@ -403,6 +432,8 @@ export class OhlcComponent implements OnInit {
   }
 
   draw() {
+
+
     this.svg.select('g.x.axis').call(this.xAxis)
     this.svg.select('g.ohlc .axis').call(this.yAxis)
     this.svg.select('g.volume.axis').call(this.volumeAxis)
@@ -433,6 +464,22 @@ export class OhlcComponent implements OnInit {
 
     this.draw()
   }
+
+
+
+
+
+// gridlines in x axis function
+ make_x_gridlines() {
+    return d3.axisBottom(this.xGridScale)
+        .ticks(5)
+}
+
+// gridlines in y axis function
+ make_y_gridlines() {
+    return d3.axisLeft(this.yGridScale)
+        .ticks(5)
+}
 
 
 
