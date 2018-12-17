@@ -57,12 +57,12 @@ export class OhlcComponent implements OnInit {
   timeAnnotation
   ohlcAnnotation
   closeAnnotation
+  volumeAxis
   percentAxis
   percentAnnotation
-  volumeAxis
   volumeAnnotation
-  defs
   svg
+  defs
   macdScale
   rsiScale
   indicatorSelection
@@ -88,13 +88,10 @@ export class OhlcComponent implements OnInit {
 
   appendLastItem() {
 
-    // const last: Ohlc = this.ohlcData.list[this.ohlcData.list.length - 1]
+    const last: Ohlc = this.ohlcData.list[this.ohlcData.list.length - 1]
 
-    // let date = last.date.split('-')
+    this.ohlcData.list.push(this.ohlcData.list[this.ohlcData.list.length - 1])
 
-    // date =
-
-    // this.ohlcData.list.push(this.ohlcData.list[this.ohlcData.list.length - 1])
   }
 
   ngOnInit() {
@@ -146,33 +143,7 @@ export class OhlcComponent implements OnInit {
       .xScale(this.x)
       .yScale(this.y)
 
-    this.tradearrow = techan.plot.tradearrow()
-      .xScale(this.x)
-      .yScale(this.y)
-      .y((d) => {
-        if (d.type === 'buy') {
-          return this.y(d.low) + 5
-        }
-        if (d.type === 'sell') {
-          return this.y(d.high) - 5
-        } else {
-          return this.y(d.price)
-        }
-      })
 
-
-    this.sma0 = techan.plot.sma()
-      .xScale(this.x)
-      .yScale(this.y)
-
-    this.sma1 = techan.plot.sma()
-      .xScale(this.x)
-      .yScale(this.y)
-
-
-    this.ema2 = techan.plot.ema()
-      .xScale(this.x)
-      .yScale(this.y)
 
     this.volume = techan.plot.volume()
       .accessor(this.candlestick.accessor())   // Set the accessor to a ohlc accessor so we get highlighted bars
@@ -201,7 +172,7 @@ export class OhlcComponent implements OnInit {
 
 
     this.ohlcAnnotation = techan.plot.axisannotation()
-      .axis(this.yAxis)
+    .axis(this.yAxis)
       .orient('right')
       .format(d3.format(',.2f'))
       .translate([this.x(1), 0])
@@ -281,6 +252,7 @@ export class OhlcComponent implements OnInit {
       .attr('width', this.dim.plot.width)
       .attr('height', this.dim.ohlc.height)
 
+
     this.defs.selectAll('indicatorClip').data([0, 1])
       .enter()
       .append('clipPath')
@@ -317,20 +289,6 @@ export class OhlcComponent implements OnInit {
       .attr('class', 'candlestick')
       .attr('clip-path', 'url(#ohlcClip)')
 
-    this.ohlcSelection.append('g')
-      .attr('class', 'indicator sma ma-0')
-      .attr('clip-path', 'url(#ohlcClip)')
-
-    this.ohlcSelection.append('g')
-      .attr('class', 'indicator sma ma-1')
-      .attr('clip-path', 'url(#ohlcClip)')
-
-    this.ohlcSelection.append('g')
-      .attr('class', 'indicator ema ma-2')
-      .attr('clip-path', 'url(#ohlcClip)')
-
-    this.ohlcSelection.append('g')
-      .attr('class', 'percent axis')
 
     this.ohlcSelection.append('g')
       .attr('class', 'volume axis')
@@ -360,7 +318,6 @@ export class OhlcComponent implements OnInit {
       .xAnnotation(this.timeAnnotation)
       .yAnnotation([this.ohlcAnnotation, this.percentAnnotation, this.volumeAnnotation])
       .verticalWireRange([0, this.dim.plot.height])
-
 
 
     this.showD3Chart()
@@ -410,6 +367,7 @@ export class OhlcComponent implements OnInit {
 
 
     this.svg.select('g.candlestick').datum(data).call(this.candlestick)
+
     this.svg.select('g.close.annotation').datum([data[data.length - 1]]).call(this.closeAnnotation)
     this.svg.select('g.volume').datum(data).call(this.volume)
     // this.svg.select('g.sma.ma-0').datum(techan.indicator.sma().period(10)(data)).call(this.sma0)
@@ -419,6 +377,11 @@ export class OhlcComponent implements OnInit {
     this.zoomableInit = this.x.zoomable().domain([indicatorPreRoll, data.length]).copy() // Zoom in a little to hide indicator preroll
     this.yInit = this.y.copy()
     this.yPercentInit = this.yPercent.copy()
+
+  // .on('mouseout', () => {
+
+  //     // tip.style('display', 'none');
+  // })
 
     this.draw()
 
