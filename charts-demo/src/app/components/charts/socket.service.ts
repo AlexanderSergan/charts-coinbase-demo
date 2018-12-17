@@ -23,7 +23,7 @@ export class SocketService implements OnInit {
   public socket
 
   public initSocket(): void {
-      this.socket = socketIo('http://localhost:8000/events')
+      this.socket = socketIo('localhost:8000/events')
 
       .on('connection', () => {
 

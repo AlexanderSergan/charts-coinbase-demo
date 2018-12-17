@@ -27,22 +27,6 @@ export class OhlcComponent implements OnInit {
     this.socket = socket
   }
 
-  // TODO: remove rci block
-
-
-  // private initIoConnection(): void {
-  //   this.socket.initSocket();
-
-  //   this.ioConnection = this.socket.onMessage()
-  //     .subscribe((message: any) => {
-  //       this.messages.push(message);
-  //       console.log('messages updated: ', this.messages)
-  //     });
-
-  //   }
-
-
-
   dim: any
   yInit
   yPercentInit
