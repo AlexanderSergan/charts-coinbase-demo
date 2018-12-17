@@ -42,7 +42,7 @@ export class SocketService implements OnInit {
   public onOHLCData(): Observable<any> {
       return new Observable<any>(observer => {
         this.socket.on('ohlc', (data: any) => {
-          console.log('Got OHLC data from server!: ', data);
+          console.log('Got OHLC data from server!: ', data)
           return observer.next(data)
         })
     })

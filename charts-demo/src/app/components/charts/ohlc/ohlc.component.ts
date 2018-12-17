@@ -8,7 +8,7 @@ import {
 import { OhlcDataset } from './ohlc-dataset'
 import * as d3 from 'd3'
 import * as techan from 'techan'
-import { Ohlc } from './ohlc';
+import { Ohlc } from './ohlc'
 
 @Component({
   selector: 'app-ohlc',

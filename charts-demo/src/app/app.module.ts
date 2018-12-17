@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core'
 
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
-import { OhlcComponent } from './components/charts/ohlc/ohlc.component';
+import { OhlcComponent } from './components/charts/ohlc/ohlc.component'
 import { DepthComponent } from './components/charts/depth/depth.component'
 
 @NgModule({

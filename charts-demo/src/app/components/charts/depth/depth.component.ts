@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import * as am4core from "@amcharts/amcharts4/core";
-import * as am4charts from "@amcharts/amcharts4/charts";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import { Component, OnInit } from '@angular/core'
+import * as am4core from '@amcharts/amcharts4/core'
+import * as am4charts from '@amcharts/amcharts4/charts'
+import am4themes_animated from '@amcharts/amcharts4/themes/animated'
 
 
 
@@ -9,7 +9,7 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 @Component({
   selector: 'app-depth',
   templateUrl: './depth.component.html',
-  styleUrls: ['./depth.component.scss']
+  styleUrls: ['./depth.component.scss'],
 })
 export class DepthComponent implements OnInit {
 
@@ -19,22 +19,22 @@ export class DepthComponent implements OnInit {
 
     /* Chart code */
 // Themes begin
-am4core.useTheme(am4themes_animated);
+am4core.useTheme(am4themes_animated)
 // Themes end
 
 // Create chart instance
 
 // Add data
-let chart = am4core.create("chartdiv", am4charts.XYChart);
-chart.dataSource.url = "https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_ETH&depth=50";
-chart.dataSource.reloadFrequency = 30000;
-chart.dataSource.adapter.add("parsedData", function(data) {
+const chart = am4core.create('chartdiv', am4charts.XYChart)
+chart.dataSource.url = 'https://poloniex.com/public?command=returnOrderBook&currencyPair=BTC_ETH&depth=50'
+chart.dataSource.reloadFrequency = 30000
+chart.dataSource.adapter.add('parsedData', function(data) {
 
   // Function to process (sort and calculate cummulative volume)
   function processData(list, type, desc) {
 
     // Convert to data points
-    for(var i = 0; i < list.length; i++) {
+    for (let i = 0; i < list.length; i++) {
       list[i] = {
         value: Number(list[i][0]),
         volume: Number(list[i][1]),
@@ -44,106 +44,101 @@ chart.dataSource.adapter.add("parsedData", function(data) {
     // Sort list just in case
     list.sort(function(a, b) {
       if (a.value > b.value) {
-        return 1;
+        return 1
+      } else if (a.value < b.value) {
+        return -1
+      } else {
+        return 0
       }
-      else if (a.value < b.value) {
-        return -1;
-      }
-      else {
-        return 0;
-      }
-    });
+    })
 
     // Calculate cummulative volume
     if (desc) {
-      for(var i = list.length - 1; i >= 0; i--) {
+      for (let i = list.length - 1; i >= 0; i--) {
         if (i < (list.length - 1)) {
-          list[i].totalvolume = list[i+1].totalvolume + list[i].volume;
+          list[i].totalvolume = list[i + 1].totalvolume + list[i].volume
+        } else {
+          list[i].totalvolume = list[i].volume
         }
-        else {
-          list[i].totalvolume = list[i].volume;
-        }
-        let dp = {};
-        dp["value"] = list[i].value;
-        dp[type + "volume"] = list[i].volume;
-        dp[type + "totalvolume"] = list[i].totalvolume;
-        res.unshift(dp);
+        const dp = {}
+        dp['value'] = list[i].value
+        dp[type + 'volume'] = list[i].volume
+        dp[type + 'totalvolume'] = list[i].totalvolume
+        res.unshift(dp)
       }
-    }
-    else {
-      for(var i = 0; i < list.length; i++) {
+    } else {
+      for (let i = 0; i < list.length; i++) {
         if (i > 0) {
-          list[i].totalvolume = list[i-1].totalvolume + list[i].volume;
+          list[i].totalvolume = list[i - 1].totalvolume + list[i].volume
+        } else {
+          list[i].totalvolume = list[i].volume
         }
-        else {
-          list[i].totalvolume = list[i].volume;
-        }
-        let dp = {};
-        dp["value"] = list[i].value;
-        dp[type + "volume"] = list[i].volume;
-        dp[type + "totalvolume"] = list[i].totalvolume;
-        res.push(dp);
+        const dp = {}
+        dp['value'] = list[i].value
+        dp[type + 'volume'] = list[i].volume
+        dp[type + 'totalvolume'] = list[i].totalvolume
+        res.push(dp)
       }
     }
 
   }
 
   // Init
-  let res = [];
-  processData(data.bids, "bids", true);
-  processData(data.asks, "asks", false);
+  const res = []
+  processData(data.bids, 'bids', true)
+  processData(data.asks, 'asks', false)
 
-  return res;
-});
+  return res
+})
 
 // Set up precision for numbers
-chart.numberFormatter.numberFormat = "#,###.####";
+chart.numberFormatter.numberFormat = '#,###.####'
 
 // Create axes
-let xAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-xAxis.dataFields.category = "value";
-//xAxis.renderer.grid.template.location = 0;
-xAxis.renderer.minGridDistance = 50;
-xAxis.title.text = "Price (BTC/ETH)";
+const xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+xAxis.dataFields.category = 'value'
+// xAxis.renderer.grid.template.location = 0;
+xAxis.renderer.minGridDistance = 50
+xAxis.title.text = 'Price (BTC/ETH)'
 
-let yAxis = chart.yAxes.push(new am4charts.ValueAxis());
-yAxis.title.text = "Volume";
+const yAxis = chart.yAxes.push(new am4charts.ValueAxis())
+yAxis.title.text = 'Volume'
 
 // Create series
-let series = chart.series.push(new am4charts.StepLineSeries());
-series.dataFields.categoryX = "value";
-series.dataFields.valueY = "bidstotalvolume";
-series.strokeWidth = 2;
-series.stroke = am4core.color("#0f0");
-series.fill = series.stroke;
-series.fillOpacity = 0.1;
-series.tooltipText = "Ask: [bold]{categoryX}[/]\nTotal volume: [bold]{valueY}[/]\nVolume: [bold]{bidsvolume}[/]"
+const series = chart.series.push(new am4charts.StepLineSeries())
+series.dataFields.categoryX = 'value'
+series.dataFields.valueY = 'bidstotalvolume'
+series.strokeWidth = 2
+series.stroke = am4core.color('#0f0')
+series.fill = series.stroke
+series.fillOpacity = 0.1
+series.tooltipText = 'Ask: [bold]{categoryX}[/]\nTotal volume: [bold]{valueY}[/]\nVolume: [bold]{bidsvolume}[/]'
 
-let series2 = chart.series.push(new am4charts.StepLineSeries());
-series2.dataFields.categoryX = "value";
-series2.dataFields.valueY = "askstotalvolume";
-series2.strokeWidth = 2;
-series2.stroke = am4core.color("#f00");
-series2.fill = series2.stroke;
-series2.fillOpacity = 0.1;
-series2.tooltipText = "Ask: [bold]{categoryX}[/]\nTotal volume: [bold]{valueY}[/]\nVolume: [bold]{asksvolume}[/]"
+const series2 = chart.series.push(new am4charts.StepLineSeries())
+series2.dataFields.categoryX = 'value'
+series2.dataFields.valueY = 'askstotalvolume'
+series2.strokeWidth = 2
+series2.stroke = am4core.color('#f00')
+series2.fill = series2.stroke
+series2.fillOpacity = 0.1
+series2.tooltipText = 'Ask: [bold]{categoryX}[/]\nTotal volume: [bold]{valueY}[/]\nVolume: [bold]{asksvolume}[/]'
 
-let series3 = chart.series.push(new am4charts.ColumnSeries());
-series3.dataFields.categoryX = "value";
-series3.dataFields.valueY = "bidsvolume";
-series3.strokeWidth = 0;
-series3.fill = am4core.color("#000");
-series3.fillOpacity = 0.2;
+const series3 = chart.series.push(new am4charts.ColumnSeries())
+series3.dataFields.categoryX = 'value'
+series3.dataFields.valueY = 'bidsvolume'
+series3.strokeWidth = 0
+series3.fill = am4core.color('#000')
+series3.fillOpacity = 0.2
 
-let series4 = chart.series.push(new am4charts.ColumnSeries());
-series4.dataFields.categoryX = "value";
-series4.dataFields.valueY = "asksvolume";
-series4.strokeWidth = 0;
-series4.fill = am4core.color("#000");
-series4.fillOpacity = 0.2;
+const series4 = chart.series.push(new am4charts.ColumnSeries())
+series4.dataFields.categoryX = 'value'
+series4.dataFields.valueY = 'asksvolume'
+series4.strokeWidth = 0
+series4.fill = am4core.color('#000')
+series4.fillOpacity = 0.2
 
 // Add cursor
-chart.cursor = new am4charts.XYCursor();
+chart.cursor = new am4charts.XYCursor()
 
   }
 
