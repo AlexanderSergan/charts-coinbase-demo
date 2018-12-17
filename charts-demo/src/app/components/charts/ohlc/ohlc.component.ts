@@ -247,7 +247,7 @@ export class OhlcComponent implements OnInit {
       this.svg.append('g')
       .attr('class', 'grid grid-lines')
       .attr('transform', `translate(0, ${this.dim.plot.height})`)
-      .call(this.make_x_gridlines()
+      .call(this.getXGridlines()
           .tickSize(-this.dim.plot.height)
           .tickFormat(null),
       )
@@ -255,7 +255,7 @@ export class OhlcComponent implements OnInit {
     // add the Y gridlines
     this.svg.append('g')
       .attr('class', 'grid grid-lines')
-      .call(this.make_y_gridlines()
+      .call(this.getYGridlines()
           .tickSize(-this.dim.plot.width)
           .tickFormat(null),
       )
@@ -408,19 +408,11 @@ export class OhlcComponent implements OnInit {
     this.yPercent.domain(techan.scale.plot.percent(this.y, accessor(data[indicatorPreRoll])).domain())
     this.yVolume.domain(techan.scale.plot.volume(data).domain())
 
-    const trades = [
-      { date: data[6].date, type: 'buy', price: data[6].low, low: data[6].low, high: data[6].high },
-      { date: data[7].date, type: 'sell', price: data[7].high, low: data[7].low, high: data[7].high },
-      { date: data[8].date, type: 'buy', price: data[8].low, low: data[8].low, high: data[8].high },
-      { date: data[5].date, type: 'sell', price: data[5].low, low: data[5].low, high: data[5].high },
-    ]
-
-    const macdData = techan.indicator.macd()(data)
 
     this.svg.select('g.candlestick').datum(data).call(this.candlestick)
     this.svg.select('g.close.annotation').datum([data[data.length - 1]]).call(this.closeAnnotation)
     this.svg.select('g.volume').datum(data).call(this.volume)
-    this.svg.select('g.sma.ma-0').datum(techan.indicator.sma().period(10)(data)).call(this.sma0)
+    // this.svg.select('g.sma.ma-0').datum(techan.indicator.sma().period(10)(data)).call(this.sma0)
 
     this.svg.select('g.crosshair.ohlc').call(this.ohlcCrosshair).call(this.zoom)
 
@@ -438,17 +430,16 @@ export class OhlcComponent implements OnInit {
     this.svg.select('g.x.axis').call(this.xAxis)
     this.svg.select('g.ohlc .axis').call(this.yAxis)
     this.svg.select('g.volume.axis').call(this.volumeAxis)
-    this.svg.select('g.percent.axis').call(this.percentAxis)
+    // this.svg.select('g.percent.axis').call(this.percentAxis)
 
     this.svg.select('g.close.annotation').call(this.closeAnnotation.refresh)
     this.svg.select('g.candlestick').call(this.candlestick.refresh)
     this.svg.select('g.volume').call(this.volume.refresh)
-    this.svg.select('g .sma.ma-0').call(this.sma0.refresh)
-    this.svg.select('g .sma.ma-1').call(this.sma1.refresh)
-    this.svg.select('g .ema.ma-2').call(this.ema2.refresh)
+
     this.svg.select('g.crosshair.ohlc').call(this.ohlcCrosshair.refresh)
     this.svg.select('g.trendlines').call(this.trendline.refresh)
     this.svg.select('g.supstances').call(this.supstance.refresh)
+
   }
 
 
@@ -461,29 +452,25 @@ export class OhlcComponent implements OnInit {
   zoomed() {
     this.x.zoomable().domain(d3.event.transform.rescaleX(this.zoomableInit).domain())
     this.y.domain(d3.event.transform.rescaleY(this.yInit).domain())
-    this.yPercent.domain(d3.event.transform.rescaleY(this.yPercentInit).domain())
+    // this.yPercent.domain(d3.event.transform.rescaleY(this.yPercentInit).domain())
+    this.xGridScale.domain(d3.event.transform.rescaleX(this.zoomableInit).domain())
+
 
     this.draw()
   }
 
 
-
-
-
 // gridlines in x axis function
- make_x_gridlines() {
+ getXGridlines() {
     return d3.axisBottom(this.xGridScale)
         .ticks(10)
 }
 
 // gridlines in y axis function
- make_y_gridlines() {
+ getYGridlines() {
     return d3.axisLeft(this.yGridScale)
         .ticks(5)
 }
-
-
-
 
 
   ohlcData: OhlcDataset = {

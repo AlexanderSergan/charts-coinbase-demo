@@ -1,5 +1,8 @@
 $color-transparent: #37ffff00;
 $color-background: #0a1119;
+$color-text:  #9fa4a6;
+$color-candle-red: #f55d46;
+$color-candle-green: #4c8c54;
 
 
 body {
@@ -28,8 +31,8 @@ path.candle.body {
 }
 
 path.candle.up {
-  fill: #00AA00;
-  stroke: #00AA00;
+  fill: $color-candle-green;
+  stroke: $color-candle-green;
   fill-opacity: .5;
   fill-rule: nonzero;
   // stroke
@@ -38,8 +41,8 @@ path.candle.up {
 
 path.candle.down {
 
-  fill: #fc6939;
-  stroke: #fc6939;
+  fill: $color-candle-red;
+  stroke: $color-candle-red;
 }
 
 .close.annotation.up path {
@@ -179,9 +182,6 @@ path.zero {
 .crosshair {
   cursor: crosshair;
 }
-path.domain[stroke] {
-  stroke: white;
-}
 
 .crosshair path.wire {
   stroke: #DDDDDD;
@@ -192,30 +192,6 @@ path.domain[stroke] {
   fill: #DDDDDD;
 }
 
-.tradearrow path.tradearrow {
-  stroke: none;
-}
-
-.tradearrow path.buy {
-  fill: #0000FF;
-}
-
-.tradearrow path.sell {
-  fill: #9900FF;
-}
-
-.tradearrow path.highlight {
-  fill: none;
-  stroke-width: 2;
-}
-
-.tradearrow path.highlight.buy {
-  stroke: #0000FF;
-}
-
-.tradearrow path.highlight.sell {
-  stroke: #9900FF;
-}
 
 .crosshair .axisannotation path {
   fill: #1c2a35;
@@ -225,5 +201,29 @@ path.domain[stroke] {
   fill: white;
   font: 10px sans-serif;
   text-anchor: middle;
-
 }
+
+// remove text from xy axis
+g.grid-lines text {
+  display: none;
+}
+
+
+// xy asis
+g.axis {
+
+  .tick {
+
+    text {
+      fill: $color-text;
+    }
+    line {
+      stroke: $color-text;
+    }
+  }
+
+  path.domain[stroke] {
+    stroke: $color-text;
+  }
+}
+
