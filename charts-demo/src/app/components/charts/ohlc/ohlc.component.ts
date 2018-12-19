@@ -3,12 +3,18 @@ import {
   Component,
   OnInit,
   ViewEncapsulation,
+  Input,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core'
 
 import { OhlcDataset } from './ohlc-dataset'
 import * as d3 from 'd3'
 import * as techan from 'techan'
 import { Ohlc } from './ohlc'
+import { Observable } from 'rxjs'
+import { of } from 'rxjs'
+import { from } from 'rxjs'
 
 @Component({
   selector: 'app-ohlc',
@@ -16,7 +22,7 @@ import { Ohlc } from './ohlc'
   styleUrls: ['./ohlc.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class OhlcComponent implements OnInit {
+export class OhlcComponent implements OnInit, OnChanges {
 
   socket
   ioConnection
@@ -83,23 +89,30 @@ export class OhlcComponent implements OnInit {
   yGridScale
 
 
+  @Input()
+  dynamicData: any[]
+  dynamicData$: Observable<any>
 
   dateTimeFormat: string
 
-  appendLastItem() {
 
-    const last: Ohlc = this.ohlcData.list[this.ohlcData.list.length - 1]
-
-    this.ohlcData.list.push(this.ohlcData.list[this.ohlcData.list.length - 1])
+  ngOnChanges(changes: SimpleChanges) {
+    console.log('component changes!', changes.dynamicDScurrentValue);
+    this.showD3Chart(changes.dynamicDScurrentValue)
 
   }
 
   ngOnInit() {
 
-    this.socket.initSocket()
+    // this.dynamicData$ = from(this.dynamicData )
 
-    this.socket.send('privet!')
-    this.socket.onOHLCData().subscribe( data => console.log('yeboi ohlc data in the component: ', data))
+    // this.dynamicData$.subscribe( change => console.log('data changed', change) )
+
+
+    // this.socket.initSocket()
+
+    // this.socket.send('privet!')
+    // this.socket.onOHLCData().subscribe( data => console.log('yeboi ohlc data in the component: ', data))
 
     this.dateTimeFormat = '%d-%b-%y'  // "23-Dec-13"
 
@@ -320,15 +333,7 @@ export class OhlcComponent implements OnInit {
       .verticalWireRange([0, this.dim.plot.height])
 
 
-    this.showD3Chart()
-
-
-    // setInterval(() => {
-
-    //   this.appendLastItem()
-    //   this.showD3Chart()
-
-    // }, 2000)
+    this.showD3Chart(this.ohlcData.list)
 
     /**
      * OnInit function end
@@ -337,14 +342,14 @@ export class OhlcComponent implements OnInit {
 
 
 
-  showD3Chart() {
+  showD3Chart(dataInput) {
 
     let data: any[]
 
     const accessor = this.candlestick.accessor(),
       indicatorPreRoll = 5  // Don't show where indicators don't have data
 
-    data = this.ohlcData.list.map((d) => {
+    data = dataInput.map((d) => {
       const obj = {
 
         date: this.parseDate(d.date),
