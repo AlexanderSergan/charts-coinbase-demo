@@ -1,5 +1,16 @@
+$color-transparent: #37ffff00;
+$color-background: #0a1119;
+$color-text:  #9fa4a6;
+$color-candle-red: #f55d46;
+$color-candle-green: #4c8c54;
+
+
+body {
+  background-color: $color-background;
+}
+
 text {
-  fill: #000;
+  fill: white;
 }
 
 text.symbol {
@@ -20,13 +31,18 @@ path.candle.body {
 }
 
 path.candle.up {
-  fill: #00AA00;
-  stroke: #00AA00;
+  fill: $color-candle-green;
+  stroke: $color-candle-green;
+  fill-opacity: .5;
+  fill-rule: nonzero;
+  // stroke
+
 }
 
 path.candle.down {
-  fill: #FF0000;
-  stroke: #FF0000;
+
+  fill: $color-candle-red;
+  stroke: $color-candle-red;
 }
 
 .close.annotation.up path {
@@ -83,17 +99,32 @@ path.rsi {
   stroke: #000000;
 }
 
-path.overbought, path.oversold {
+g.grid-lines line {
+  stroke: #232730;
+}
+
+.volume path {
+  fill: rgba(146, 146, 146, .26);
+}
+
+path.overbought,
+path.oversold {
   stroke: #FF9999;
   stroke-dasharray: 5, 5;
 }
 
-path.middle, path.zero {
+path.candle.body {
+  stroke-width: 0;
+}
+
+path.middle,
+path.zero {
   stroke: #BBBBBB;
   stroke-dasharray: 5, 5;
 }
 
-.analysis path, .analysis circle {
+.analysis path,
+.analysis circle {
   stroke: blue;
   stroke-width: 0.8;
 }
@@ -112,11 +143,13 @@ path.middle, path.zero {
   display: inline;
 }
 
-.dragging .trendline path, .dragging .trendline circle {
+.dragging .trendline path,
+.dragging .trendline circle {
   stroke: darkblue;
 }
 
-.interaction path, .interaction circle {
+.interaction path,
+.interaction circle {
   pointer-events: all;
 }
 
@@ -124,7 +157,8 @@ path.middle, path.zero {
   cursor: move;
 }
 
-.trendlines .interaction .start, .trendlines .interaction .end {
+.trendlines .interaction .start,
+.trendlines .interaction .end {
   cursor: nwse-resize;
 }
 
@@ -158,27 +192,38 @@ path.middle, path.zero {
   fill: #DDDDDD;
 }
 
-.tradearrow path.tradearrow {
-  stroke: none;
+
+.crosshair .axisannotation path {
+  fill: #1c2a35;
 }
 
-.tradearrow path.buy {
-  fill: #0000FF;
+.crosshair .axisannotation g.data text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: middle;
 }
 
-.tradearrow path.sell {
-  fill: #9900FF;
+// remove text from xy axis
+g.grid-lines text {
+  display: none;
 }
 
-.tradearrow path.highlight {
-  fill: none;
-  stroke-width: 2;
+
+// xy asis
+g.axis {
+
+  .tick {
+
+    text {
+      fill: $color-text;
+    }
+    line {
+      stroke: $color-text;
+    }
+  }
+
+  path.domain[stroke] {
+    stroke: $color-text;
+  }
 }
 
-.tradearrow path.highlight.buy {
-  stroke: #0000FF;
-}
-
-.tradearrow path.highlight.sell {
-  stroke: #9900FF;
-}
