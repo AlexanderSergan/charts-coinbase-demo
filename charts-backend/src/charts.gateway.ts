@@ -935,12 +935,12 @@ export class ChartsGateway implements OnModuleInit {
 
   ];
     // emit data here
-    this.emitOHLC([...data].slice(0, Math.floor(data.length / 2)));
-    setTimeout(() => {
-      [...data].slice(Math.floor(data.length / 2), data.length).forEach(element => {
-        this.emitOHLC([element]);
+    this.emitOHLC(data.slice(0, Math.floor(data.length / 2)));
+    data.slice(Math.floor(data.length / 2), data.length).forEach((elem, i) => {
+      setTimeout(() => {
+        this.emitOHLC([elem[i]]);
+      } , 2000);
       });
-    } , 2000);
 
     return 'Hello from server!';
   }
